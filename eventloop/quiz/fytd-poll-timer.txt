@@ -1,3 +1,12 @@
 - Explain the order of execution in terms of the event loop for eventloop/poll_timer.js.
+In its default state of having a delay of 100ms, the order is someAsyncOperation, which is a callack to file I/O, and then the timeout.
+The file read goes into poll and into a different thread when executed.  The timer will go to the pending callback phase.  It starts with
+the I/O and completes that in the poll phase.  Then it goes back to the to the pending callback phase and executes the timer.
+
+setTimeout was placed into the timers phase.  After, soneAsyncOperation is called and logged.  After being logged, it is placed into the
+poll phase as it contains an asyncronous I/O.  Now the loop executes.  I/O callbacks go first.  After that, it goes back to the timer.
 - Will the order of execution change if the delay in the while loop is changed from 10s to 150s? Why or why not?
+No.  The I/O operation finishes before the timer completes.
+
 - Will the order of execution change if timeout is changed to 0? Why or why not?
+Yes because the I/O operation will not finish before the timer is complete.

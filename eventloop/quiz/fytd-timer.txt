@@ -1,1 +1,5 @@
 - In eventloop/timer.js, what will be the order of execution? Briefly explain the order of execution w.r.t the event loop phases.
+
+It prints foo baz foo baz 2 bar 1 bar.  It does not finish the first synchronous foo until after the second foo is called.
+Since the timer is 0 and there is no I/O, the bar(2) callback is executed after the main thread is completed (the foo and baz prints).
+Then after, bar(1) is called as it is the final callback.

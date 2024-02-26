@@ -1,2 +1,9 @@
 - Explain the order of execution in terms of the event loop for eventloop/immediate.js.
+All of this happens within the async file I/O.  First it places the read file call in poll and the callback in pending callbacks.
+Then it goes to checks.  There's nothing so it returns to the loop.  It executes the I/O read file callback which is then completed.
+After the file read completes, it places the asynchronous schedule timeout in timers and continues through the function.
+setImmediate is placed in the check phase.  Then it continues through the event loop.  Since it makes it to check before it gets
+back to timers, it will always call setImmediate before it finishes the timer. 
+
 - Will the order of execution change if timeout is changed to 0? Why or why not?
+Even at 0, setImmediate runs first because of it comes before setTimeout in the hierarchy.

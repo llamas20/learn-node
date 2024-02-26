@@ -1,1 +1,8 @@
 - In eventloop/poll.js, what will be the order of execution? Briefly explain the order of execution w.r.t the event loop phases.
+
+It executes in the order foo, done, someAsyncOperation.  This is because foo and the console.log('done') are both synchronous.
+The asynchronous operation does not execute until the callback queue is completed (the foo and the done).
+
+The whole program runs on the main thread synchronously.  There's an I/O operation inside of someAsyncOperation.
+It is sent to the polling phase for after the main thread completes.  Function foo and the console.log(done) are both
+synchronous and are executed on the main thread.  Once that finishes, someAsyncOperation is executed.
